@@ -1,0 +1,14 @@
+node_modules/
+release/
+dist/
+out/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.env
+.cache/
+
+# Generated at build time by scripts/gen-icon.cjs
+build/icon.png
+assets/icon.png

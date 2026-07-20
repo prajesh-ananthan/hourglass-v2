@@ -1,0 +1,74 @@
+{
+  "name": "hourglass-v2",
+  "productName": "Hourglass",
+  "version": "1.0.0",
+  "description": "A simple, beautiful, standalone countdown timer for Windows 11 and macOS.",
+  "main": "src/main.js",
+  "author": {
+    "name": "Hourglass v2"
+  },
+  "license": "MIT",
+  "scripts": {
+    "icons": "node scripts/gen-icon.cjs",
+    "prestart": "node scripts/gen-icon.cjs",
+    "start": "electron .",
+    "test": "node test/parser.test.js",
+    "prepack": "node scripts/gen-icon.cjs",
+    "pack": "electron-builder --dir",
+    "predist": "node scripts/gen-icon.cjs",
+    "dist": "electron-builder",
+    "predist:win": "node scripts/gen-icon.cjs",
+    "dist:win": "electron-builder --win",
+    "predist:mac": "node scripts/gen-icon.cjs",
+    "dist:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.hourglassv2.app",
+    "productName": "Hourglass",
+    "copyright": "Copyright © 2026",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "!**/*.md"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64", "arm64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Hourglass"
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] },
+        { "target": "zip", "arch": ["x64", "arm64"] }
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png"
+    },
+    "dmg": {
+      "title": "Hourglass"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Utility",
+      "icon": "build/icon.png"
+    }
+  }
+}
