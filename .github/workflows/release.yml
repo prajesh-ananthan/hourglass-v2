@@ -35,7 +35,7 @@ jobs:
         run: npm test
 
       - name: Build & package
-        run: npm run ${{ matrix.dist-script }}
+        run: npm run ${{ matrix.dist-script }} -- --publish never
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
