@@ -22,7 +22,7 @@ runtime or browser required.
 - **Finish alarm** — a pleasant chime (optionally looping) synthesised in-app.
 - **Pop-up when finished** — the window comes to the front and flashes.
 - **Always on top** toggle to keep the timer visible.
-- **Light / dark / system themes.**
+- **Neon Rain theme** — dark cyberpunk look with an orange glow (JetBrains Mono + Orbitron).
 - **Custom titles** for each timer, and **quick presets / recent inputs**.
 - **Multiple timer windows** (File → New Timer Window / `Ctrl`/`Cmd`+`N`).
 - **Settings persist** between launches.
@@ -71,7 +71,43 @@ Output installers are written to the `release/` directory.
 > **Note on cross-compiling:** Windows targets are best built on Windows and
 > macOS targets on macOS. electron-builder can produce a Windows build from
 > other platforms if Wine is available, but native `.dmg`/code-signed builds
-> require macOS.
+> require macOS. In practice, use the [CI release workflow](#releasing) below
+> instead of cross-compiling locally.
+
+### Releasing (CI-built, both platforms)
+
+`.github/workflows/release.yml` builds macOS and Windows installers on their
+native runners and attaches them to a GitHub Release automatically:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+This triggers the workflow, which runs the test suite, builds on
+`macos-latest` and `windows-latest` in parallel, and publishes a Release with
+the `.dmg`, `.zip`, `.exe` (NSIS installer), and portable `.exe` attached. You
+can also trigger it manually from the Actions tab (`workflow_dispatch`) to
+sanity-check a build without publishing a tag.
+
+### A note for people downloading the app
+
+These builds are **not code-signed or notarized** (that requires a paid Apple
+Developer account and a Windows code-signing certificate, which this project
+doesn't have). Both operating systems will warn about that on first launch:
+
+- **macOS:** Gatekeeper will say the app "cannot be opened because it is from
+  an unidentified developer" (or, on newer macOS, that it's "damaged"). To
+  open it anyway: right-click (or Control-click) the app in Finder → **Open**
+  → **Open** again in the dialog. This only needs to be done once. If macOS
+  still refuses, run `xattr -cr /Applications/Hourglass.app` in Terminal to
+  clear the quarantine flag.
+- **Windows:** SmartScreen will show "Windows protected your PC". Click
+  **More info** → **Run anyway**.
+
+This is normal for indie/open-source apps distributed outside an app store —
+it does not mean the app is unsafe, just that it isn't signed by a paid
+certificate authority.
 
 ## Project structure
 

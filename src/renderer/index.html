@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;" />
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self';" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hourglass</title>
   <link rel="stylesheet" href="styles.css" />
@@ -72,15 +72,6 @@
           <h2>Settings</h2>
           <button class="icon-btn" id="closeSettings" title="Close">✕</button>
         </div>
-
-        <label class="setting">
-          <span>Theme</span>
-          <select id="themeSelect">
-            <option value="system">System</option>
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-          </select>
-        </label>
 
         <label class="setting toggle">
           <span>Play sound when finished</span>

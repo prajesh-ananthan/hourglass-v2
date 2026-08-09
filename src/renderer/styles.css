@@ -1,28 +1,54 @@
-:root {
-  --bg: #0f172a;
-  --bg-2: #1e293b;
-  --surface: rgba(255, 255, 255, 0.06);
-  --surface-hover: rgba(255, 255, 255, 0.12);
-  --text: #f1f5f9;
-  --text-dim: #94a3b8;
-  --accent: #3b82f6;
-  --accent-2: #6d28d9;
-  --danger: #ef4444;
-  --progress: rgba(59, 130, 246, 0.22);
-  --border: rgba(255, 255, 255, 0.12);
-  --shadow: rgba(0, 0, 0, 0.35);
+/* ============================================================
+   Hourglass — "Neon Rain" theme
+   Dark base, orange neon glow, JetBrains Mono + Orbitron.
+   Single theme (replaces the former dark/light system).
+   ============================================================ */
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../../assets/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../../assets/fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Orbitron";
+  src: url("../../assets/fonts/Orbitron-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-:root[data-theme="light"] {
-  --bg: #f8fafc;
-  --bg-2: #eef2f7;
-  --surface: rgba(15, 23, 42, 0.05);
-  --surface-hover: rgba(15, 23, 42, 0.1);
-  --text: #0f172a;
-  --text-dim: #64748b;
-  --progress: rgba(59, 130, 246, 0.16);
-  --border: rgba(15, 23, 42, 0.12);
-  --shadow: rgba(15, 23, 42, 0.15);
+:root {
+  --bg: #150a04;
+  --bg-2: #1e0e05;
+  --surface: rgba(255, 140, 60, 0.05);
+  --surface-hover: rgba(255, 140, 60, 0.12);
+  --text: #ffb27a;
+  --text-dim: #a9805f;
+  --accent: #ff6b1a;
+  --accent-2: #ff9a3d;
+  --danger: #ff8a8a;
+  --danger-border: rgba(255, 90, 90, 0.35);
+  --progress: rgba(255, 107, 26, 0.16);
+  --border: rgba(255, 140, 60, 0.35);
+  --border-dim: rgba(255, 140, 60, 0.25);
+  --glow: rgba(255, 140, 60, 0.7);
+  --glow-far: rgba(255, 90, 20, 0.4);
+  --shadow: rgba(0, 0, 0, 0.5);
+
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-display: "Orbitron", var(--font-mono);
+
+  --radius: 2px;
+  --radius-pill: 999px;
 }
 
 * {
@@ -36,8 +62,7 @@ html, body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  font-family: var(--font-mono);
   color: var(--text);
   background: var(--bg);
   overflow: hidden;
@@ -54,12 +79,28 @@ body {
   transition: background 0.4s ease;
 }
 
+/* Faint scan-grid backdrop for the cyberpunk feel */
+.app::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 140, 60, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 140, 60, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
 /* Progress fill grows left→right as time elapses */
 .progress-fill {
   position: absolute;
   inset: 0;
   width: 0%;
-  background: linear-gradient(90deg, var(--progress), var(--progress));
+  z-index: 1;
+  background: linear-gradient(90deg, transparent, var(--progress));
+  border-right: 2px solid var(--accent);
+  box-shadow: 0 0 16px var(--glow);
   transition: width 0.25s linear;
   pointer-events: none;
 }
@@ -69,7 +110,7 @@ body {
 }
 @keyframes flashbg {
   0%, 100% { background: linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%); }
-  50% { background: linear-gradient(160deg, #7f1d1d 0%, #b91c1c 100%); }
+  50% { background: linear-gradient(160deg, #7a2c00 0%, #b34500 100%); }
 }
 
 .content {
@@ -80,8 +121,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: 28px 24px;
+  gap: 12px;
+  padding: 26px 24px;
   text-align: center;
 }
 
@@ -89,12 +130,14 @@ body {
   background: transparent;
   border: none;
   color: var(--text-dim);
-  font-size: 15px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1px;
   text-align: center;
-  width: 80%;
+  width: 85%;
   outline: none;
   padding: 2px 6px;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 .timer-title:focus {
   background: var(--surface);
@@ -103,25 +146,31 @@ body {
 .timer-title::placeholder { color: var(--text-dim); opacity: 0.6; }
 
 .display {
-  font-size: clamp(48px, 16vw, 96px);
-  font-weight: 200;
+  font-family: var(--font-display);
+  font-size: clamp(46px, 15vw, 88px);
+  font-weight: 700;
   letter-spacing: 2px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  transition: color 0.3s ease;
+  color: #ffb27a;
+  text-shadow: 0 0 18px var(--glow), 0 0 40px var(--glow-far);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
-.display.finished { color: #fff; font-weight: 300; }
+.display.finished {
+  color: #fff;
+  text-shadow: 0 0 22px var(--glow), 0 0 48px var(--glow-far);
+}
 
 .subline {
   color: var(--text-dim);
-  font-size: 13px;
-  min-height: 16px;
+  font-size: 12px;
+  min-height: 14px;
 }
 
 .input-row {
   display: flex;
   gap: 8px;
-  width: min(420px, 90%);
+  width: min(420px, 92%);
 }
 
 .time-input {
@@ -129,15 +178,17 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 10px;
-  padding: 11px 14px;
-  font-size: 15px;
+  font-family: var(--font-mono);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 14px;
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 .time-input:focus {
   border-color: var(--accent);
   background: var(--surface-hover);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 12px var(--glow-far);
 }
 .time-input::placeholder { color: var(--text-dim); }
 
@@ -145,12 +196,14 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 10px;
-  padding: 11px 18px;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s, transform 0.05s, border-color 0.15s;
+  letter-spacing: 0.5px;
+  transition: background 0.15s, transform 0.05s, border-color 0.15s, box-shadow 0.15s;
 }
 .btn:hover { background: var(--surface-hover); }
 .btn:active { transform: scale(0.97); }
@@ -158,42 +211,59 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   border-color: transparent;
-  color: #fff;
+  color: #150a04;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 1px;
+  box-shadow: 0 0 16px var(--glow-far);
 }
-.btn-primary:hover { filter: brightness(1.08); background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.btn-primary:hover {
+  filter: brightness(1.08);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 22px var(--glow);
+}
 
-.btn-danger { color: var(--danger); }
-.btn-danger:hover { background: rgba(239, 68, 68, 0.15); }
+.btn-danger {
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+.btn-danger:hover { background: rgba(255, 90, 90, 0.12); }
 
 .hint {
   font-size: 12px;
-  min-height: 16px;
+  min-height: 14px;
   color: var(--text-dim);
 }
-.hint.error { color: #f87171; }
+.hint.error { color: #ff8a8a; }
 
 .presets {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
-  max-width: 90%;
+  max-width: 92%;
+  margin-top: 2px;
 }
 .chip {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: transparent;
+  border: 1px solid var(--border-dim);
   color: var(--text-dim);
-  border-radius: 999px;
-  padding: 6px 13px;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  font-size: 11px;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.chip:hover { background: var(--surface-hover); color: var(--text); }
+.chip:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-color: var(--border);
+}
 
 .controls {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* Toolbar */
@@ -207,26 +277,34 @@ body {
 }
 .icon-btn {
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   color: var(--text-dim);
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.icon-btn:hover { background: var(--surface); color: var(--text); }
+.icon-btn:hover {
+  background: var(--surface);
+  color: var(--accent);
+  border-color: var(--border);
+}
 .icon-btn svg { fill: currentColor; }
-.icon-btn.active { color: var(--accent); background: var(--surface); }
+.icon-btn.active {
+  color: var(--accent);
+  background: var(--surface);
+  border-color: var(--border);
+}
 
 /* Settings drawer */
 .drawer {
   position: absolute;
   inset: 0;
   z-index: 5;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: flex-end;
   animation: fade 0.15s ease;
@@ -251,7 +329,13 @@ body {
   justify-content: space-between;
   margin-bottom: 14px;
 }
-.drawer-head h2 { font-size: 17px; font-weight: 600; }
+.drawer-head h2 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
 
 .setting {
   display: flex;
@@ -259,20 +343,26 @@ body {
   justify-content: space-between;
   gap: 12px;
   padding: 11px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
+  border-bottom: 1px solid var(--border-dim);
+  font-size: 13px;
 }
 .setting span { color: var(--text); }
 .setting select {
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 10px;
-  font-size: 13px;
+  font-size: 12px;
+  font-family: var(--font-mono);
   outline: none;
 }
-.setting.toggle input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent); }
+.setting.toggle input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
 
 .drawer-foot {
   margin-top: 16px;
@@ -282,9 +372,11 @@ body {
 }
 .drawer-foot code {
   background: var(--surface);
+  border: 1px solid var(--border-dim);
   padding: 1px 5px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   font-size: 11px;
+  color: var(--text);
 }
 
 [hidden] { display: none !important; }

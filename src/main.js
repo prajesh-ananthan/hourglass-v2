@@ -61,7 +61,7 @@ function createWindow(options = {}) {
     height: settings.window.height || 380,
     minWidth: 360,
     minHeight: 260,
-    backgroundColor: '#0f172a',
+    backgroundColor: '#150a04',
     title: 'Hourglass',
     icon: path.join(__dirname, '..', 'assets', 'icon.png'),
     alwaysOnTop: settings.alwaysOnTop,

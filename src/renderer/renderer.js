@@ -24,7 +24,6 @@ const el = {
   settingsBtn: $('settingsBtn'),
   drawer: $('drawer'),
   closeSettings: $('closeSettings'),
-  themeSelect: $('themeSelect'),
   soundEnabled: $('soundEnabled'),
   loopSound: $('loopSound'),
   popUp: $('popUp'),
@@ -44,7 +43,6 @@ const PRESETS = [
 const State = { IDLE: 'idle', RUNNING: 'running', PAUSED: 'paused', FINISHED: 'finished' };
 
 const DEFAULT_SETTINGS = {
-  theme: 'system',
   soundEnabled: true,
   loopSound: false,
   popUpWhenExpired: true,
@@ -311,16 +309,7 @@ function renderPresets() {
 }
 
 // ---- Settings wiring ----------------------------------------------------
-function applyTheme(theme) {
-  if (theme === 'system') {
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    document.documentElement.setAttribute('data-theme', theme);
-  }
-}
-
 function syncSettingsUI() {
-  el.themeSelect.value = settings.theme;
   el.soundEnabled.checked = settings.soundEnabled;
   el.loopSound.checked = settings.loopSound;
   el.popUp.checked = settings.popUpWhenExpired;
@@ -362,10 +351,6 @@ el.settingsBtn.addEventListener('click', openDrawer);
 el.closeSettings.addEventListener('click', closeDrawer);
 el.drawer.addEventListener('click', (e) => { if (e.target === el.drawer) closeDrawer(); });
 
-el.themeSelect.addEventListener('change', () => {
-  persist({ theme: el.themeSelect.value });
-  applyTheme(el.themeSelect.value);
-});
 el.soundEnabled.addEventListener('change', () => persist({ soundEnabled: el.soundEnabled.checked }));
 el.loopSound.addEventListener('change', () => persist({ loopSound: el.loopSound.checked }));
 el.popUp.addEventListener('change', () => persist({ popUpWhenExpired: el.popUp.checked }));
@@ -406,7 +391,6 @@ window.addEventListener('resize', () => {
 // ---- Init ---------------------------------------------------------------
 async function init() {
   settings = { ...DEFAULT_SETTINGS, ...(await window.hourglass.getSettings()) };
-  applyTheme(settings.theme);
   syncSettingsUI();
   renderPresets();
   setState(State.IDLE);
