@@ -50,8 +50,13 @@ function pad(n) {
   return String(n).padStart(2, '0');
 }
 
-/** Format a millisecond duration as H:MM:SS (or M:SS when under an hour). */
-function formatDuration(ms) {
+/**
+ * Format a millisecond duration as H:MM:SS (or M:SS when under an hour).
+ * Pass `{ alwaysHours: true }` to always include the hours place (H:MM:SS),
+ * even for durations under an hour (e.g. "0:04:32").
+ */
+function formatDuration(ms, opts) {
+  const alwaysHours = !!(opts && opts.alwaysHours);
   const negative = ms < 0;
   let total = Math.round(Math.abs(ms) / 1000);
   const days = Math.floor(total / 86400);
@@ -64,7 +69,7 @@ function formatDuration(ms) {
   let out;
   if (days > 0) {
     out = `${days}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-  } else if (hours > 0) {
+  } else if (hours > 0 || alwaysHours) {
     out = `${hours}:${pad(minutes)}:${pad(seconds)}`;
   } else {
     out = `${minutes}:${pad(seconds)}`;

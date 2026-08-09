@@ -129,8 +129,8 @@ function setState(next) {
 }
 
 function updateDisplay(ms) {
-  const text = ms >= 0 ? formatDuration(ms) : formatDuration(0);
-  el.display.textContent = text;
+  const clamped = ms >= 0 ? ms : 0;
+  el.display.textContent = formatDuration(clamped, { alwaysHours: true });
 
   // progress
   let pct = 0;
@@ -140,7 +140,7 @@ function updateDisplay(ms) {
   // window title
   const titlePrefix = el.title.value ? `${el.title.value} — ` : '';
   if (settings.showProgressInTitle && (state === State.RUNNING || state === State.PAUSED)) {
-    window.hourglass.setWindowTitle(`${titlePrefix}${text}`);
+    window.hourglass.setWindowTitle(`${titlePrefix}${formatDuration(clamped)}`);
   } else if (state === State.FINISHED) {
     window.hourglass.setWindowTitle(`${titlePrefix}Time's up!`);
   } else {
@@ -233,7 +233,7 @@ function stop() {
   totalMs = 0;
   endTime = 0;
   el.subline.textContent = '';
-  el.display.textContent = '0:00';
+  el.display.textContent = '0:00:00';
   el.progressFill.style.width = '0%';
   el.app.classList.remove('finished');
   el.display.classList.remove('finished');
